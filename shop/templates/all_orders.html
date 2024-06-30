@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sizning barcha buyirmalaringiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff;
+        }
+
+        .order-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .order-details p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            color: #007bff;
+            margin: 0 5px;
+            padding: 5px 10px;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .pagination a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .pagination .current {
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .order-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Sizning barcha buyirmalaringiz</h1>
+    {% for order in page_obj %}
+        <div class="order-container">
+            <div class="order-details">
+                <p><strong>Zakaz raqami:</strong> {{ order.id }}</p>
+                <p><strong>Kitob nomi:</strong> {{ order.book.title }}</p>
+                <p><strong>Zakaz qilingan vaxt:</strong> {{ order.order_time }}</p>
+                <p><strong>Holat:</strong> {{ order.status.status }}</p>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if page_obj.has_other_pages %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; первая</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Oldingi</a>
+                {% endif %}
+
+                <span class="current">
+                    Sahifa {{ page_obj.number }} dan {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Keyingi</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Ohirgi &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,295 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.title }}</title>
+    <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Ваши стили */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .book-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .book-cover {
+            max-width: 100px; /* Уменьшен размер обложки книги */
+            border-radius: 8px; /* Уменьшен радиус скругления углов */
+            margin-right: 20px;
+            position: relative;
+        }
+        .back-icon {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px; /* Уменьшен размер иконки назад */
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-icon:hover {
+            color: #2980b9;
+        }
+        .book-details {
+            flex: 1;
+        }
+        h1 {
+            font-size: 28px; /* Уменьшен размер заголовка книги */
+            margin-bottom: 15px; /* Уменьшен внешний отступ */
+        }
+        p {
+            line-height: 1.6;
+            margin: 8px 0; /* Уменьшен внешний отступ */
+        }
+        .discount-price {
+            font-size: 18px; /* Уменьшен размер цены со скидкой */
+            font-weight: bold;
+            color: #e74c3c;
+            margin-top: 8px; /* Уменьшен внешний отступ */
+        }
+        .price {
+            text-decoration: line-through;
+            color: #7f8c8d;
+            margin-left: 8px; /* Уменьшен внешний отступ */
+        }
+        .rating {
+            color: #f39c12;
+            font-size: 16px; /* Уменьшен размер рейтинга */
+        }
+        h2 {
+            margin-top: 30px; /* Уменьшен внешний отступ */
+            font-size: 24px; /* Уменьшен размер заголовка отзывов */
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 8px; /* Уменьшен внешний отступ */
+            margin-bottom: 15px; /* Уменьшен внешний отступ */
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            background: #f4f4f4;
+            margin-bottom: 12px; /* Уменьшен внешний отступ */
+            padding: 12px;
+            border-radius: 8px; /* Уменьшен радиус скругления углов */
+        }
+        form {
+            margin-top: 10px; /* Уменьшен внешний отступ */
+        }
+        form div {
+            margin-bottom: 10px; /* Уменьшен внешний отступ */
+        }
+        form input, form button, form textarea {
+            width: calc(100% - 24px); /* Уменьшена ширина элементов формы */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px; /* Уменьшен размер шрифта */
+        }
+        form button {
+            background: #2ecc71;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            padding: 10px; /* Уменьшен внутренний отступ */
+            width: auto; /* Ширина кнопки автоматическая */
+            max-width: 200px; /* Максимальная ширина кнопки */
+            margin-right: 10px; /* Уменьшен внешний отступ */
+        }
+        form button:hover {
+            background: #27ae60;
+        }
+        .star-rating i {
+            font-size: 20px; /* Уменьшен размер иконок рейтинга */
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .star-rating i:hover, .star-rating i.active {
+            color: #f39c12;
+        }
+        .order-button {
+            display: block;
+            margin: 15px auto; /* Уменьшен внешний отступ */
+            padding: 20px 30px; /* Уменьшен внутренний отступ */
+            background: #3498db;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            width: auto; /* Ширина кнопки автоматическая */
+            max-width: 200px; /* Максимальная ширина кнопки */
+        }
+        .order-button:hover {
+            background: #2980b9;
+        }
+        .back-link {
+            display: block;
+            margin-top: 15px; /* Уменьшен внешний отступ */
+            text-decoration: none;
+            color: #3498db;
+            font-size: 16px; /* Уменьшен размер ссылки */
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .reviews {
+            max-height: 180px; /* Уменьшен максимальный размер отзывов */
+            overflow-y: auto;
+            transition: max-height 0.3s ease;
+        }
+        .show-more {
+            display: block;
+            text-align: center;
+            margin: 15px 0; /* Уменьшен внешний отступ */
+            cursor: pointer;
+            color: #3498db;
+            font-size: 16px; /* Уменьшен размер текста */
+        }
+        .big {
+            font-size: 20px; /* Уменьшен размер крупного текста */
+        }
+
+        /* Медиа-запрос для мобильных устройств */
+        @media screen and (max-width: 768px) {
+            .book-cover {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            .book-details {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="book-header">
+            <a href="{% url 'index' %}" class="back-icon"><i class="fas fa-arrow-left"></i></a>
+            {% if book.cover_image %}
+                <img class="book-cover" src="{{ book.cover_image.url }}" alt="{{ book.title }} cover">
+            {% else %}
+                <img class="book-cover" src="{% static 'shop/placeholder.png' %}" alt="No cover image available">
+            {% endif %}
+            <div class="book-details">
+                <h1>{{ book.title }}</h1>
+                <p><strong>Author:</strong> {{ book.author.name }}</p>
+                <p><strong>Category:</strong> {{ book.category.name }}</p>
+                <p>{{ book.description }}</p>
+                <p>Narxi</p>
+                <p><strong>Narxi:</strong> <span class="balance{% if book.discount_price and book.discount_price < book.price %} discounted{% endif %}">{{ book.price }}</span>{% if book.discount_price %} (<span class="discount-price"><span class="big">{{ book.discount_price }}</span></span> with discount){% endif %}</p>
+                <p class="rating">
+                    {% for _ in '12345' %}
+                        {% if forloop.counter <= book.average_rating %}
+                            <i class="fas fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+
+        <h2>Sharhlar</h2>
+        <ul class="reviews">
+            {% for review in reviews %}
+                <li>
+                    <strong>{{ review.user.username }}</strong>: {{ review.comment }}
+                    <span class="rating">
+                        {% for _ in '12345' %}
+                            {% if forloop.counter <= review.stars %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="show-more">Ko'proq ko'rsatish</div>
+
+        {% if user.is_authenticated %}
+            <h2>Sharh qo'shish</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div>
+                    {{ form.comment.label_tag }} {{ form.comment }}
+                </div>
+                <div>
+                    {{ form.stars.label_tag }}
+                    <input type="hidden" name="stars" value="{{ form.instance.stars|default_if_none:'0' }}">
+                    <div id="star-rating" class="star-rating">
+                        {% for i in '12345' %}
+                            {% if i <= form.instance.stars|default_if_none:'0' %}
+                                <i class="fas fa-star" data-value="{{ i }}"></i>
+                            {% else %}
+                                <i class="far fa-star" data-value="{{ i }}"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <button type="submit">Yuborish</button>
+            </form>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const stars = document.querySelectorAll('#star-rating i');
+                    const starInput = document.querySelector('input[name="stars"]');
+                    
+                    stars.forEach(star => {
+                        star.addEventListener('click', function() {
+                            const rating = this.getAttribute('data-value');
+                            starInput.value = rating;
+                            stars.forEach((s, index) => {
+                                if (index < rating) {
+                                    s.classList.remove('far');
+                                    s.classList.add('fas');
+                                } else {
+                                    s.classList.remove('fas');
+                                    s.classList.add('far');
+                                }
+                            });
+                        });
+                    });
+
+                    // Show more/less functionality for reviews
+                    const reviews = document.querySelector('.reviews');
+                    const showMoreButton = document.querySelector('.show-more');
+
+                    showMoreButton.addEventListener('click', function() {
+                        if (reviews.style.maxHeight === 'none') {
+                            reviews.style.maxHeight = '180px';
+                            this.textContent = "Ko'proq ko'rsatish";
+                        } else {
+                            reviews.style.maxHeight = 'none';
+                            this.textContent = "Kamroq ko'rsatish";
+                        }
+                    });
+                });
+            </script>
+        {% else %}
+            <p><a href="{% url 'login' %}">Log in</a> qilish.</p>
+        {% endif %}
+
+        <a href="{% url 'order_book' book.pk %}" class="order-button"><i class="fas fa-shopping-cart"></i> Buyurtma Berish</a>
+
+    </div>
+</body>
+</html>

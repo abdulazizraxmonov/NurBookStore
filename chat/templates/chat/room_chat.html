@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ room.name }}</title>
+    <style>
+        /* Reset styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Global styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        /* Messages */
+        #messages {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message p {
+            margin: 0;
+            color: #333;
+            word-wrap: break-word;
+        }
+
+        .message img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .message img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Reply form */
+        .reply-form {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .reply-form label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+
+        .reply-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .reply-form button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Notification styles */
+        .notification {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* Direct message indicator */
+        .direct-message {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* Reply message indicator */
+        .reply-message {
+            color: #555;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        form button[type="submit"] {
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ room.name }}</h1>
+
+        <div id="messages">
+            <!-- Inside your message rendering loop -->
+            {% for message in messages %}
+            <div class="message {% if message.replied_to == request.user %}reply-to-me{% endif %}">
+                <img class="avatar" src="{% if message.user.userprofile.photo %}{{ message.user.userprofile.photo.url }}{% else %}/path/to/default/avatar.png{% endif %}" alt="Avatar">
+                <div class="message-content">
+                    <p>{{ message.user.username }}:</p>
+                    <p>{{ message.content }}</p>
+                    {% if message.image %}
+                    <img src="{{ message.image.url }}" alt="Message Image">
+                    {% endif %}
+                    {% if message.replied_to == request.user %}
+                    <p class="reply-indicator">Ushbu foydalanuvchi sizga javob berdi {{ message.user.username }}</p>
+                    {% endif %}
+                    <!-- Reply form within each message -->
+                    <form method="post" action="{% url 'reply_message' room_id=room.id message_id=message.id %}" class="reply-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="replied_to_user_id" value="{{ message.user.id }}">
+                        <label for="id_reply_content">Javob berish:</label>
+                        <textarea id="id_reply_content" name="content" rows="2" placeholder="Habarga javob..." required></textarea>
+                        <button type="submit">Yuborish</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Main message sending form -->
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="id_content">Habar yuborish:</label>
+            <textarea id="id_content" name="content" rows="4" placeholder="Habarigizni kiriritng..." required></textarea>
+
+            <label for="id_image">Rasim yuboeish:</label>
+            <input type="file" id="id_image" name="image">
+
+            <button type="submit">Yuborish</button>
+        </form>
+    </div>
+</body>
+</html>

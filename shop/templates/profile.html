@@ -1,0 +1,148 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }}'s Profile</title>
+    <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .profile-card {
+            width: 90%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .profile-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .user-info {
+            text-align: left;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+        }
+        p {
+            font-size: 16px;
+            color: #666;
+            margin: 5px 0;
+        }
+        .balance-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin: 20px 0;
+        }
+        .balance {
+            background-color: #e7f3fe;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .balance p {
+            margin: 5px 0;
+            color: #333;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            margin: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        @media screen and (max-width: 600px) {
+            .profile-card {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            img.profile-img {
+                width: 60px;
+                height: 60px;
+            }
+            p {
+                font-size: 14px;
+            }
+            .btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="header">
+                <img src="{% if user.userprofile.photo %}{{ user.userprofile.photo.url }}{% else %}{% static 'shop/default-profile.jpg' %}{% endif %}" alt="Profile Image" class="profile-img">
+                <div class="user-info">
+                    <h1>{{ user.username }}</h1>
+                    <p>ID: {{ user.id }}</p>
+                </div>
+                <img src="{% static 'shop/logo.png' %}" alt="Logo" class="logo-img">
+            </div>
+            <div class="balance-container">
+                <div class="balance">
+                    <p>Umumiy harajat</p>
+                    <p>{{ total_spent|intcomma }} UZS</p>
+                </div>
+            </div>
+            <div class="btn-container">
+                <a href="{% url 'favorite_books' %}" class="btn">Yoqtirgan kitoblarim</a>
+                <a href="{% url 'all_orders' %}" class="btn">Buyurtmalarim</a>
+                <a href="{% url 'edit_profile' %}" class="btn">Profilni yangilash</a>
+                <a href="{% url 'logout' %}" class="btn">Akkauntdan chiqish</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

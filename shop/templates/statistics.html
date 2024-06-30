@@ -1,0 +1,137 @@
+<!-- templates/statistics.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<style>/* static/styles.css */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Roboto', sans-serif;
+    }
+    
+    body {
+        background: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    
+    .container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 800px;
+    }
+    
+    h1 {
+        text-align: center;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+    
+    .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat {
+        background: #6a11cb;
+        color: #fff;
+        padding: 1rem;
+        border-radius: 5px;
+        flex: 1 1 calc(33.333% - 1rem);
+        text-align: center;
+    }
+    
+    .stat h2 {
+        margin-bottom: 0.5rem;
+    }
+    
+    ul {
+        list-style: none;
+        margin-bottom: 1rem;
+    }
+    
+    li {
+        background: #e0e0e0;
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        border-radius: 5px;
+    }
+    </style>
+<body>
+    <div class="container">
+        <h1>Detailed Statistics</h1>
+        <div class="stats">
+            <div class="stat">
+                <h2>Total Books</h2>
+                <p>{{ total_books }}</p>
+            </div>
+            <div class="stat">
+                <h2>Total Authors</h2>
+                <p>{{ total_authors }}</p>
+            </div>
+            <div class="stat">
+                <h2>Total Categories</h2>
+                <p>{{ total_categories }}</p>
+            </div>
+            <div class="stat">
+                <h2>Total Orders</h2>
+                <p>{{ total_orders }}</p>
+            </div>
+            <div class="stat">
+                <h2>Total Users</h2>
+                <p>{{ total_users }}</p>
+            </div>
+            <div class="stat">
+                <h2>Average Rating</h2>
+                <p>{{ avg_rating|default:0|floatformat:2 }}</p>
+            </div>
+            <div class="stat">
+                <h2>Total Reviews</h2>
+                <p>{{ total_reviews }}</p>
+            </div>
+            <div class="stat">
+                <h2>Average Book Price</h2>
+                <p>${{ avg_price|default:0|floatformat:2 }}</p>
+            </div>
+            <div class="stat">
+                <h2>Total Sales</h2>
+                <p>${{ total_sales|default:0|floatformat:2 }}</p>
+            </div>
+        </div>
+        
+        <h2>Top Selling Books</h2>
+        <ul>
+            {% for book in top_selling_books %}
+                <li>{{ book.title }} - Sold: {{ book.total_sold }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Top Authors</h2>
+        <ul>
+            {% for author in top_authors %}
+                <li>{{ author.name }} - Books: {{ author.total_books }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Top Categories</h2>
+        <ul>
+            {% for category in top_categories %}
+                <li>{{ category.name }} - Books: {{ category.total_books }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

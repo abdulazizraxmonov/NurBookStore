@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tolov sahifasi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        img {
+            max-width: 100%;
+            max-height: 200px;
+            display: block;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-number {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+            color: #007bff;
+        }
+        
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Back icon styles */
+        .back-icon {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            color: #333;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <i class="fas fa-arrow-left back-icon" onclick="goBack()"></i>
+        <h1>Tolov sahifasi</h1>
+        <p>Buyurtma Tafsilotlari:</p>
+        <p>Order ID: {{ order.id }}</p>
+        <p>Kitob: {{ order.book.title }}</p>
+        <p>Miqdori: {{ order.quantity }}</p>
+        <p>To'lov Tizimi: {{ payment_system.name }}</p>
+        <b>Umumiy to'lov summasi: {{ total_amount }}</b> <!-- Display total amount -->
+        <form method="post">
+            {% csrf_token %}
+            <p style="color: red;">Tolov qildim tugmasini bosishdan oldin tolov amalga oshirgan bolshingiz kerak</p>
+            <p class="card-number">Karta raqam: {{ payment_system.number }}</p>
+            <button type="submit">Tolov qildim</button>
+        </form>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

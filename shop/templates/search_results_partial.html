@@ -1,0 +1,15 @@
+<!-- search_results_partial.html -->
+{% for book in books %}
+    <div class="search-result-item d-flex align-items-center p-2" data-url="{% url 'book_detail' book.id %}" style="cursor: pointer;">
+        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="img-thumbnail mr-3" style="width: 50px; height: 75px; object-fit: cover;">
+        <div>
+            <h5 class="mb-1">{{ book.title }}</h5>
+            <p class="mb-0 text-muted">by {{ book.author.name }}</p>
+        </div>
+    </div>
+{% empty %}
+    <div class="search-result-item p-2">
+        <p class="mb-0">No results found.</p>
+    </div>
+{% endfor %}
+

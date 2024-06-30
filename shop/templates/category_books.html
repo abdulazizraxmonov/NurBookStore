@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category.name }} Books</title>
+    <!-- Подключаем Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+    }
+    .menu-container {
+        float: left;
+        width: 200px;
+        margin-right: 20px;
+    }
+    .menu-container ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .menu-container ul li {
+        margin-bottom: 5px;
+    }
+    .menu-container ul li a {
+        text-decoration: none;
+        color: #333;
+        font-size: 16px;
+        display: block;
+        padding: 5px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .menu-container ul li a:hover {
+        background-color: #eee;
+    }
+    .book-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding: 20px;
+    }
+    .book-card {
+        width: 200px;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+    .book-card:hover {
+        transform: translateY(-5px);
+    }
+    .book-card img {
+        width: 100%;
+        border-radius: 5px;
+    }
+    .book-details h3 {
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #333;
+    }
+    .book-details p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #555;
+    }
+    .discounted {
+        position: relative;
+    }
+    .discounted::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #cc2e2e;
+        z-index: 1;
+    }
+    .discounted span {
+        position: relative;
+        z-index: 2;
+        font-weight: bold;
+    }
+    .book-actions {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .book-actions form {
+        margin: 0;
+    }
+    .book-actions button {
+        padding: 8px 16px;
+        font-size: 8px;
+        background-color: #2ecc71;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .book-actions button:hover {
+        background-color: #27ae60;
+    }
+    .book-actions button i {
+        margin-right: 5px;
+    }
+    .pagination {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+    .pagination a {
+        padding: 5px 10px;
+        margin: 0 5px;
+        font-size: 16px;
+        color: #333;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .pagination a:hover {
+        background-color: #eee;
+    }
+    .current {
+        font-weight: bold;
+    }
+.category, .author {
+    max-height: 300px; /* Максимальная высота блока */
+    overflow-y: auto; /* Добавляем вертикальную прокрутку при необходимости */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.category h2, .author h2 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+}
+.category ul, .author ul {
+    padding: 0;
+    margin: 0;
+}
+.category ul li, .author ul li {
+    margin-bottom: 5px;
+}
+.category ul li a, .author ul li a {
+    text-decoration: none;
+    color: #555;
+    font-size: 16px;
+    display: block;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+.category ul li a:hover, .author ul li a:hover {
+    background-color: #f0f0f0;
+}
+</style>
+<body>
+    <div class="book-container">
+        {% for book in books %}
+            <div class="book-card">
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                <div class="book-details">
+                    <h3>{{ book.title }}</h3>
+                    <p><strong>Price:</strong> <span class="balance{% if book.discount_price and book.discount_price < book.price %} discounted{% endif %}">{{ book.price }}</span>{% if book.discount_price %} ({{ book.discount_price }} with discount){% endif %}</p>
+                    <p><strong>Rating:</strong>
+                        {% if book.average_rating %}
+                            {% for _ in book.average_rating|floatformat %}
+                                &#9733;
+                            {% endfor %}
+                            {{ book.review_count }} review{% if book.review_count != 1 %}s{% endif %}
+                        {% else %}
+                            Not rated yet
+                        {% endif %}
+                    </p>
+                    <div class="book-actions">
+                        <form action="{% url 'book_detail' book.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"><i class="fas fa-info-circle"></i> Details</button>
+                        </form>
+                        <form action="{% url 'add_to_favorite' book.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"><i class="fas fa-heart"></i> Add to Favorites</button>
+                        </form>
+                        <form action="{% url 'order_book' book.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"><i class="fas fa-shopping-cart"></i> Order</button>
+                        </form>
+                    </div> 
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

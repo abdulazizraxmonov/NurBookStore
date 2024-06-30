@@ -1,0 +1,125 @@
+<!-- templates/user_spending.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Spending</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<style>/* static/styles.css */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Roboto', sans-serif;
+    }
+    
+    body {
+        background: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    
+    .container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 800px;
+    }
+    
+    h1 {
+        text-align: center;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+    
+    .filters {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    
+    .filters input[type="text"],
+    .filters select {
+        padding: 0.5rem;
+        margin-right: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    
+    .filters button {
+        padding: 0.5rem 1rem;
+        background: #6a11cb;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .filters button:hover {
+        background: #2575fc;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+    }
+    
+    th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+        background: #6a11cb;
+        color: #fff;
+    }
+    
+    td {
+        background: #f9f9f9;
+    }
+    
+    td:nth-child(2) {
+        text-align: right;
+    }
+    </style>
+<body>
+    <div class="container">
+        <h1>Foydalanuvchi Xarajatlari</h1>
+
+        <form method="GET" class="filters">
+            <input type="text" name="search_query" placeholder="Foydalanuvchi ismi" value="{{ search_query }}">
+            <select name="filter_by">
+                <option value="">Filterlash</option>
+                <option value="highest" {% if filter_by == 'highest' %}selected{% endif %}>Eng yuqori harajat</option>
+                <option value="lowest" {% if filter_by == 'lowest' %}selected{% endif %}>Eng kam harajat</option>
+            </select>
+            <button type="submit">Qo'llash</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Foydalanuvchi</th>
+                    <th>Umumiy Xarajatlar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in user_spending %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>${{ user.total_spent|default:0|floatformat:2 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

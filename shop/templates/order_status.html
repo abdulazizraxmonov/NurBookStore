@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Zakaz tavsiloti</title>
+</head>
+<body>
+    <h1>Zakazingiz holati</h1>
+    <p>Zakaz raqami: {{ order.id }}</p>
+    <p>Kitob nomi: {{ order.book.title }}</p>
+    <p>Zakaz qilingan vaxt: {{ order.order_time }}</p>
+    <p>holat: {{ order.status.status }}</p>
+</body>
+</html>

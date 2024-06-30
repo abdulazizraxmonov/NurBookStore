@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biz haqimizda</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="..." crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa; /* Цвет фона страницы */
+            color: #333; /* Основной цвет текста */
+        }
+        .intro {
+            background-color: #fff; /* Цвет фона блока "About Me" */
+            padding: 80px 20px; /* Внутренние отступы блока */
+            margin-bottom: 40px; /* Нижний отступ блока */
+            border-radius: 8px; /* Скругление углов блока */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Тень блока */
+        }
+        .intro h2 {
+            font-size: 36px; /* Размер заголовка */
+            font-weight: 700; /* Жирность заголовка */
+            margin-bottom: 20px; /* Нижний отступ заголовка */
+            color: #2ecc71; /* Цвет заголовка */
+        }
+        .intro h1 {
+            font-size: 48px; /* Размер имени */
+            font-weight: 700; /* Жирность имени */
+            margin-bottom: 20px; /* Нижний отступ имени */
+        }
+        .intro p {
+            font-size: 18px; /* Размер обычного текста */
+            line-height: 1.6; /* Межстрочный интервал */
+            margin-bottom: 0; /* Убираем отступ вниз */
+        }
+        footer {
+            background-color: #2ecc71; /* Цвет фона подвала */
+            color: #fff; /* Цвет текста в подвале */
+            text-align: center; /* Выравнивание текста по центру */
+            padding: 20px 0; /* Внутренние отступы в подвале */
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="container">
+        <section class="intro text-center mb-5">
+            <h2>Biz haqimizda</h2>
+            {% if about %}
+                <h1>{{ about.fullname }}</h1>
+                <p>{{ about.description }}</p>
+            {% else %}
+                <p>No information available.</p>
+            {% endif %}
+        </section>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+</body>
+</html>

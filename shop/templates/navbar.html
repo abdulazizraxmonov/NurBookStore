@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nur-BookStore</title>
+    <!-- Подключаем Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar {
+            background-color: #ffffff; /* Цвет фона навбара */
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .navbar-brand {
+            color: #333; /* Цвет текста бренда */
+            font-size: 24px;
+            font-weight: bold; /* Жирный текст */
+        }
+
+        .navbar-nav .nav-link {
+            color: #333; /* Цвет текста ссылок */
+            font-size: 18px;
+            padding: 8px 15px;
+            border-radius: 5px; /* Скругление углов */
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: #f2f2f2; /* Цвет фона при наведении */
+        }
+
+        .dropdown-menu {
+            border: none;
+            background-color: #ffffff; /* Цвет фона выпадающего меню */
+        }
+
+        .dropdown-item {
+            color: #333; /* Цвет текста элементов выпадающего меню */
+            font-size: 16px;
+            padding: 8px 20px;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f2f2f2; /* Цвет фона элемента при наведении */
+        }
+
+        .navbar-toggler-icon {
+            background-image: url('https://ir.ozone.ru/s3/multimedia-h/6657874001.jpg');
+            background-size: cover;
+            width: 30px;
+            height: 30px;
+        }
+
+   /* Стили для поля ввода */
+.form-inline .form-control {
+    width: 370px;
+    border-radius: 20px;
+    padding: 10px 15px;
+}
+
+/* Стили для кнопки поиска */
+.form-inline .btn {
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin-left: 10px;
+}
+
+/* Стили для иконки лупы */
+.form-inline .btn i {
+    font-size: 18px;
+}
+        /* Стили для результатов поиска */
+        #search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 0 0 10px 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background-color: #f2f2f2;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="{%url 'index'%}">Nur-BookStore</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{%url 'book_list'%}">Kitoblar</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'about'%}">Biz haqimizda <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'room_list'%}">Chat <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="https://t.me/Sardor_Xolov">Boglanish <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+
+        <form class="form-inline my-2 my-lg-0" id="search-form">
+            <input class="form-control mr-sm-2" type="search" placeholder="Qidiruv..." aria-label="Search" id="search-input">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="search-button">
+                <i class="fas fa-search"></i>
+            </button>
+            <div id="search-results"></div>
+        </form>
+
+        {% if user.is_authenticated %}
+        <a class="nav-link" href="{%url 'profile'%}">{{ user.username }}</a>
+        {% else %}
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'login'%}">Kirish</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'register'%}">Royhatdan otish</a>
+                </li>
+            </ul>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- Подключаем jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Подключаем Bootstrap JS (необходим для работы выпадающего меню) -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Закрываем выпадающее меню при выборе пункта
+        $('.navbar-nav .nav-link').on('click', function() {
+            $('.navbar-collapse').collapse('hide');
+        });
+
+        // Обработка поиска с AJAX
+        $('#search-input').on('input', function() {
+            var query = $(this).val();
+            if (query.length > 0) {
+                $.ajax({
+                    url: "{% url 'book_search_ajax' %}",
+                    data: {
+                        'q': query
+                    },
+                    success: function(data) {
+                        $('#search-results').html(data.html).show();
+                    }
+                });
+            } else {
+                $('#search-results').hide();
+            }
+        });
+
+        // Закрываем результаты поиска при клике вне формы поиска
+        $(document).click(function(e) {
+            if (!$(e.target).closest('#search-form').length) {
+                $('#search-results').hide();
+            }
+        });
+
+        // Переход по выбранному результату поиска
+        $('#search-results').on('click', '.search-result-item', function() {
+            var url = $(this).data('url');
+            window.location.href = url;
+        });
+    });
+</script>
+
+</body>
+</html>
