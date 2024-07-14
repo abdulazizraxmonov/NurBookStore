@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8m_q4co^5^xu&@8e_8%sdt_8je()0+7u7rsd!nl!sk9y-5j8x0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shop',
     'chat',
-    'phonenumber_field',  
-    'django.contrib.humanize',  
+    'phonenumber_field',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -66,7 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            
+
             ],
         },
     },
@@ -124,16 +124,18 @@ USE_TZ = True
 
 import os
 
-# Статические файлы (CSS, JavaScript, изображения)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # Путь к вашей папке со статическими файлами
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Путь для сбора всех статических файлов при использовании команды collectstatic
-
-# Медиа файлы (загруженные пользователями изображения и другие файлы)
-MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        BASE_DIR / 'static'
+    ]
+else:
+    STATIC_ROOT = BASE_DIR / 'static'
 
 
 # Default primary key field type
@@ -141,5 +143,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-TELEGRAM_BOT_TOKEN = '7432959634:AAGGmWyjXYLaXfrVLvg3orQDNkMPKS2oNPM'
+TELEGRAM_BOT_TOKEN = '6746092735:AAEfR6gwpEXaIpFO5c7e5NrsQbXr4yXmKO8'
 TELEGRAM_CHAT_ID = '661899402'
