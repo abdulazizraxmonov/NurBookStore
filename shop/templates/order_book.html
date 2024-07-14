@@ -1,115 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Book</title>
+    <title>Kitob Buyurtma</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #f9f9f9;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
         
         .container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
             padding: 30px;
-            width: 90%;
-            max-width: 400px;
-            position: relative;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative; /* Для позиционирования иконки "назад" */
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .back-icon {
+            font-size: 24px;
+            color: #007bff; /* Яркий цвет для иконки "назад" */
+            cursor: pointer;
+            transition: color 0.3s ease;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        
+        .back-icon:hover {
+            color: #0056b3;
         }
         
         h1 {
-            text-align: center;
-            color: #333333;
-            font-size: 24px;
-            margin-bottom: 20px;
+            color: #007bff; /* Яркий цвет для заголовка */
+            font-size: 32px;
+            margin-bottom: 10px;
         }
         
-        p {
-            text-align: center;
-            color: #666666;
-            margin-bottom: 20px;
+        .selected-book {
+            color: #555555;
+            margin-bottom: 30px;
         }
         
         form {
-            margin-top: 20px;
+            max-width: 400px;
+            margin: 0 auto;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #666666;
+            margin-bottom: 10px;
+            color: #333333;
+            font-weight: bold;
         }
         
         select,
         button {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #cccccc;
+            padding: 14px;
+            border: none;
             border-radius: 5px;
             margin-bottom: 20px;
             font-size: 16px;
             box-sizing: border-box;
-            background-color: #f9f9f9;
-        }
-        
-        button {
-            background-color: #007bff;
-            color: #ffffff;
+            background-color: #007bff; /* Яркий цвет фона для элементов формы */
+            color: #ffffff; /* Белый цвет текста */
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
         
         button:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; /* Тёмный оттенок при наведении */
         }
-
+        
         /* Responsive styles */
-        @media (max-width: 500px) {
+        @media (max-width: 768px) {
             .container {
-                width: 100%;
-                border-radius: 0;
-                box-shadow: none;
                 padding: 20px;
             }
-        }
-
-        /* Back icon styles */
-        .back-icon {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 20px;
-            color: #333333;
-            cursor: pointer;
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            select,
+            button {
+                padding: 12px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <i class="fas fa-arrow-left back-icon" onclick="goBack()"></i>
-        <h1>Order Book</h1>
-        <p>Selected Book: {{ book.title }}</p>
+        <a href="#" class="back-icon" onclick="goBack()"><i class="fas fa-arrow-left"></i></a>
+        <div class="header">
+            <h1>Kitob Buyurtma</h1>
+        </div>
+        
+        <div class="selected-book">
+            <p>Tanlangan Kitob: {{ book.title }}</p>
+        </div>
 
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <label for="payment_system">Select Payment System:</label>
+            
+            <label for="payment_system">To'lov Tizimi Tanlang:</label>
             <select name="payment_system" id="payment_system" required>
                 {% for system in payment_systems %}
                     <option value="{{ system.id }}">{{ system.name }}</option>
                 {% endfor %}
             </select>
-            <button type="submit">Proceed to Payment</button>
+            
+            <button type="submit">To'lovni Boshlash</button>
         </form>
     </div>
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Author, Book, Review, Order, OrderStatus, UserProfile, PaymentSystem, About
+from .models import Category, Author, Book, Review, Order, OrderStatus, UserProfile, PaymentSystem, About, Purchase, Check, TelegramUser, Gift, UserGift, PromoCode
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -46,3 +46,26 @@ class PaymentSystemAdmin(admin.ModelAdmin):
 
 
 admin.site.register(About)
+admin.site.register(Purchase)
+admin.site.register(TelegramUser)
+admin.site.register(Gift)
+admin.site.register(UserGift)
+admin.site.register(PromoCode)
+
+
+
+
+
+@admin.register(Check)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user_id', 'name', 'phone', 'city', 'address', 'payment_method', 'total_amount', 'payment_proof', 'status', 'books')
+    list_filter = ('status', 'city', 'user_id', 'payment_method')
+    search_fields = ('user_id', 'name', 'address', 'phone', 'city')
+
+
+from django.contrib import admin
+from .models import FAQ
+
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    list_display = ('question',)

@@ -2,15 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Rooms</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+        h1 {
+            font-size: 28px;
+            color: #343a40;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        li:hover {
+            background-color: #f1f1f1;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .create-room {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .create-room a {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .create-room a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Chat Rooms</h1>
-    <ul>
-        {% for room in rooms %}
-        <li><a href="{% url 'room_chat' room_id=room.id %}">{{ room.name }}</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'create_room' %}">Create Room</a>
+    <div class="container">
+        <h1>Chat Rooms</h1>
+        <ul>
+            {% for room in rooms %}
+            <li><a href="{% url 'room_chat' room_id=room.id %}">{{ room.name }}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="create-room">
+            <a href="{% url 'create_room' %}">Create Room</a>
+        </div>
+    </div>
 </body>
 </html>

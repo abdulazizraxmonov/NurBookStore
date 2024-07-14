@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUR Mobile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="..." crossorigin="anonymous">
+
+    <style>
+        /* Reset and General Styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container Styles */
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2ecc71;
+        }
+
+        /* Welcome Section Styles */
+        .welcome-container {
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .welcome-image {
+            width: 100%;
+            max-height: 450px; /* Increased height */
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        .welcome-text {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgb(0, 0, 0);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Filters Styles */
+        .filters {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .filters h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2ecc71;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .filters select, .filters button {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .filters button {
+            background-color: #00ff6a; /* Advanced button color */
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+        .filters button:hover {
+            background-color: #27ae60;
+        }
+
+        /* Book Carousel Styles */
+        .book-carousel {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .book-carousel h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2ecc71;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .owl-carousel .owl-item img {
+            width: 100%;
+            height: 500px; 
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #2ecc71;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 16px;
+            margin-top: 20px;
+            border-radius: 12px;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 16px 24px;
+            font-size: 18px;
+            background-color: #005f28; /* Advanced button color */
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn:hover {
+            background-color: #27ae60;
+        }
+        .btn i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Include -->
+    {% include 'navbar.html' %}
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header">
+            <h1>Asalomu aleykum kitob dokonimizga hush kelibsiz</h1>
+        </div>
+
+        <div class="welcome-container">
+            <img class="welcome-image" src="https://te.legra.ph/file/e6be8ebcc300e2d839f85.jpg" alt="Welcome Image">
+            
+        </div>
+        <div class="container">
+        <div class="about-section">
+            <h2>Biz haqimizda</h2>
+            <p class="skill-name">{{ about.fullname }}</p>
+            <p>{{ about.description }}</p>
+        </div>
+    </div>
+
+        <div class="book-carousel">
+            <h2>Kitoblar</h2>
+            <div class="owl-carousel owl-theme">
+                {% for book in popular_books %}
+                    <div class="item">
+                        <div class="book-card">
+                            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                            <div class="book-details">
+                                <h4>{{ book.title }}</h4>
+                                <p><strong>Narxi:</strong> <span class="balance{% if book.discount_price and book.discount_price < book.price %} discounted{% endif %}">{{ book.price }}</span>{% if book.discount_price %} ({{ book.discount_price }} chegirma bilan){% endif %}</p>
+                                <p><strong>Reyting:</strong>
+                                    {% if book.average_rating %}
+                                        {% for _ in book.average_rating|floatformat %}
+                                            &#9733;
+                                        {% endfor %}
+                                        {{ book.review_count }} review{% if book.review_count != 1 %}s{% endif %}
+                                    {% else %}
+                                        Not rated yet
+                                    {% endif %}
+                                </p>
+                                <div class="book-actions">
+                                    <form action="{% url 'add_to_favorite' book.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn"><i class="fas fa-heart"></i> Saqlab qoyish</button>
+                                    </form>
+                                    <form action="{% url 'order_book' book.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn"><i class="fas fa-shopping-cart"></i> Sotib olish</button>
+                                    </form>
+                                    <form action="{% url 'book_detail' book.pk %}" method="get">
+                                        <button type="submit" class="btn">Batafsil</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+        <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.owl-carousel').owlCarousel({
+                loop: true,
+                margin: 20,
+                nav: true,
+                dots: false,
+                responsive:{
+                    0:{
+                        items: 1
+                    },
+                    600:{
+                        items: 2
+                    },
+                    1000:{
+                        items: 3
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+{% include 'footer.html' %}

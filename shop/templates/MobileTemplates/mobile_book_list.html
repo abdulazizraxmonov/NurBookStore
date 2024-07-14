@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitoblar - Mobile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Add mobile-specific CSS here */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .filters-button, .sort-button {
+            cursor: pointer;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px 5px;
+            display: inline-block;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            background-color: #34db69;
+            color: #fff;
+        }
+        .filters-button:hover, .sort-button:hover {
+            background-color: #ffffff;
+            color: #34db69;
+        }
+        .book-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 10px;
+        }
+        .book-card {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .book-card img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+        .book-details h3 {
+            font-size: 14px;
+            color: #333;
+            margin: 5px 0;
+        }
+        .book-details p {
+            font-size: 12px;
+            color: #555;
+        }
+        .book-actions button {
+            padding: 5px 10px;
+            font-size: 12px;
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .book-actions button:hover {
+            background-color: #27ae60;
+        }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .pagination a {
+            padding: 5px 10px;
+            margin: 0 3px;
+            font-size: 12px;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        .pagination a:hover {
+            background-color: #eee;
+        }
+        .pagination .current {
+            padding: 5px 10px;
+            margin: 0 3px;
+            font-size: 12px;
+            color: #fff;
+            background-color: #34db69;
+            border: 1px solid #34db69;
+            border-radius: 5px;
+        }
+
+        /* Styling for dropdowns */
+        .dropdown {
+            margin-top: 20px;
+        }
+
+        .dropdown select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 300px;
+            appearance: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            background-color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <h1 style="text-align: center;">Kitoblar - Mobile</h1>
+    <div class="button-container">
+        <a href="{% url 'book_list' %}" class="sort-button">Barchasi</a>
+        <a href="?sort=newest" class="sort-button">Yangi kitoblar</a>
+        <a href="?sort=cheaper" class="sort-button">Arzonroq</a>
+        <a href="?sort=expensive" class="sort-button">Qimmatroq</a>
+        <a href="?sort=rating" class="sort-button">Mashur kitoblar</a>
+    </div>
+    <div class="dropdown">
+        <select name="category" id="categorySelect" onchange="applyCategoryFilter(this.value)">
+            <option value="">Barcha kategoriyalar</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="dropdown">
+        <select name="author" id="authorSelect" onchange="applyAuthorFilter(this.value)">
+            <option value="">Barcha mualliflar</option>
+            {% for author in authors %}
+                <option value="{{ author.id }}">{{ author.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="book-container">
+        {% for book in books %}
+            <div class="book-card">
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                <div class="book-details">
+                    <h3>{{ book.title }}</h3>
+                    <p><strong>Narxi:</strong> <span class="balance{% if book.discount_price and book.discount_price < book.price %} discounted{% endif %}">{{ book.price }}</span>{% if book.discount_price %} ({{ book.discount_price }} chegirma bilan){% endif %}</p>
+                    <p><strong>Reyting:</strong>
+                        {% if book.average_rating %}
+                            {% for _ in book.average_rating|floatformat %}
+                                &#9733;
+                            {% endfor %}
+                            {{ book.review_count }} review{% if book.review_count != 1 %}s{% endif %}
+                        {% else %}
+                            Not rated yet
+                        {% endif %}
+                    </p>
+                    <div class="book-actions">
+                        <form action="{% url 'book_detail' book.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"><i class="fas fa-info-circle"></i> Batafsil</button>
+                        </form>
+                        <form action="{% url 'add_to_favorite' book.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"><i class="fas fa-heart"></i> Saqlash</button>
+                        </form>
+                        <form action="{% url 'order_book' book.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"><i class="fas fa-cart-plus"></i> Sotib olish</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if books.has_previous %}
+                <a href="?page=1">&laquo; Birinchi</a>
+                <a href="?page={{ books.previous_page_number }}">Oldingi</a>
+            {% endif %}
+            <span class="current">
+                Sahifa {{ books.number }} dan {{ books.paginator.num_pages }}.
+            </span>
+            {% if books.has_next %}
+                <a href="?page={{ books.next_page_number }}">Keyingi</a>
+                <a href="?page={{ books.paginator.num_pages }}">Ohirgi &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <script>
+        function toggleFilters() {
+            // Placeholder for showing/hiding advanced filters
+        }
+
+        function applyCategoryFilter(categoryId) {
+            var url = "{% url 'book_list' %}";
+            if (categoryId) {
+                url += "?category=" + categoryId;
+            }
+            window.location.href = url;
+        }
+
+        function applyAuthorFilter(authorId) {
+            var url = "{% url 'book_list' %}";
+            if (authorId) {
+                url += "?author=" + authorId;
+            }
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>

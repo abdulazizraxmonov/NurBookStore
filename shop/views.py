@@ -42,16 +42,20 @@ def index(request):
         'authors': authors,
         'about': about,
     }
-    return render(request, 'index.html', context)
+
+    # Проверка на мобильное устройство
+    user_agent = request.META['HTTP_USER_AGENT']
+    if 'Mobile' in user_agent or 'Android' in user_agent or 'iPhone' in user_agent:
+        return render(request, 'index.html', context)
+    else:
+        return render(request, 'index.html', context)
 
 
 
 # views.py
-
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from .models import Book, Category, Author
-
 
 def book_list(request):
     all_books = Book.objects.all()
@@ -68,19 +72,17 @@ def book_list(request):
     # Apply sorting
     sort_criteria = request.GET.get('sort')
     if sort_criteria == 'newest':
-        filtered_books = filtered_books.order_by('-id')  # Sort by the book's ID (assuming newer books have higher IDs)
+        filtered_books = filtered_books.order_by('-id')
     elif sort_criteria == 'cheaper':
         filtered_books = filtered_books.order_by('price')
     elif sort_criteria == 'expensive':
         filtered_books = filtered_books.order_by('-price')
     elif sort_criteria == 'reviews':
-        filtered_books = filtered_books.order_by('-reviews')  # Sort by the number of reviews
+        filtered_books = filtered_books.order_by('-reviews')
     else:
-        # Default ordering to avoid UnorderedObjectListWarning
-        filtered_books = filtered_books.order_by('title')  # Replace 'title' with your preferred default ordering field
+        filtered_books = filtered_books.order_by('title')
 
-    paginator = Paginator(filtered_books, 5)  # 10 books per page
-
+    paginator = Paginator(filtered_books, 5)
     page = request.GET.get('page')
     try:
         books = paginator.page(page)
@@ -92,10 +94,13 @@ def book_list(request):
     categories = Category.objects.all()
     authors = Author.objects.all()
 
-    return render(request, 'book_list.html', {'books': books, 'categories': categories, 'authors': authors})
+    context = {'books': books, 'categories': categories, 'authors': authors}
 
-
-
+    user_agent = request.META['HTTP_USER_AGENT']
+    if 'Mobile' in user_agent or 'Android' in user_agent or 'iPhone' in user_agent:
+        return render(request, 'MobileTemplates/mobile_book_list.html', context)
+    else:
+        return render(request, 'book_list.html', context)
 
 
 
@@ -283,7 +288,7 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user_profile = UserProfile(user=user, balance=0)
+            user_profile = UserProfile(user=user)  # Removed balance=0
             user_profile.save()
             login(request, user)
             return redirect('index')
@@ -487,3 +492,8 @@ def about(request):
     about = About.objects.first()  # Получаем первый объект About, если он есть
      # Получаем список всех навыков
     return render(request, 'about.html', {'about': about})
+
+from django.shortcuts import render
+
+def spin_wheel(request):
+    return render(request, 'spin_wheel.html')
